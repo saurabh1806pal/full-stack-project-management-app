@@ -38,7 +38,8 @@ const registerUser = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                token: generateToken(user._id)
+                token: generateToken(user._id),
+                message: 'User registered successfully'
             });
         } else {
             res.status(400).json({ message: 'Invalid user data' });
@@ -53,6 +54,7 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
+    
 
     if (user && (await bcrypt.compare(password, user.password))) {
         res.json({
@@ -60,8 +62,10 @@ const loginUser = async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
-            token: generateToken(user._id)
+            token: generateToken(user._id),
+            message: 'Login successful'
         });
+        console.log("Login Hit");
     } else {
         res.status(401).json({ message: 'Invalid email or password' });
     }
