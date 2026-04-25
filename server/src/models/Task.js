@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const workSpace = require('./workSpace');
 
 const taskSchema = new mongoose.Schema({
     title:{
