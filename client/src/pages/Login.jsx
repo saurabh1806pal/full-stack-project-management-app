@@ -27,6 +27,7 @@ navigate("/");
 } catch (err) {
 console.error(err);
 alert("Login failed");
+throw err;
 }
 };
 

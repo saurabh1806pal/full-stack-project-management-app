@@ -11,7 +11,8 @@ export const AuthProvider = ({ children }) => {
             setLoading(true);
             const res = await API.post('/auth/login', data);
             localStorage.setItem('token', res.data.token);
-            setUser(res.data.user);
+            setUser(res.data);
+            return res.data;
         } catch (err) {
             console.error(err);
         } finally {
@@ -24,7 +25,8 @@ export const AuthProvider = ({ children }) => {
             setLoading(true);
             const res = await API.post('/auth/register', data);
             localStorage.setItem('token', res.data.token);
-            setUser(res.data.user);
+            setUser(res.data);
+            return res.data;
         } catch (err) {
             console.error(err);
         } finally {

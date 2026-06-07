@@ -27,6 +27,7 @@ navigate("/");
 } catch (err) {
 console.error(err);
 alert("Registration failed");
+throw err;
 }
 };
 
