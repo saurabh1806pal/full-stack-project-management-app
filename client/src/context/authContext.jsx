@@ -3,7 +3,10 @@ import API from "../api/axios";
 import { AuthContext } from "./authCreateContext";
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(() => {
+        const storedUser = localStorage.getItem("user");
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
     const [loading, setLoading] = useState(false);
 
     const login = async (data) => {
@@ -11,6 +14,7 @@ export const AuthProvider = ({ children }) => {
             setLoading(true);
             const res = await API.post('/auth/login', data);
             localStorage.setItem('token', res.data.token);
+            localStorage.setItem('user', JSON.stringify(res.data));
             setUser(res.data);
             return res.data;
         } catch (err) {
@@ -25,6 +29,7 @@ export const AuthProvider = ({ children }) => {
             setLoading(true);
             const res = await API.post('/auth/register', data);
             localStorage.setItem('token', res.data.token);
+            localStorage.setItem('user', JSON.stringify(res.data));
             setUser(res.data);
             return res.data;
         } catch (err) {
@@ -36,6 +41,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         setUser(null);
     };
 
