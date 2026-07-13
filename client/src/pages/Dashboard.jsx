@@ -1,11 +1,16 @@
-import { useEffect, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { WorkspaceContext } from "../context/workspaceCreateContext";
+
 import WorkspaceGrid from "../components/dashboard/WorkspaceGrid";
+import CreateWorkspaceModal from "../components/dashboard/CreateWorkspaceModal";
+
 import Navbar from "../components/Navbar"
 
 const Dashboard = () => {
   const { workspaces, fetchWorkspaces } =
     useContext(WorkspaceContext);
+
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchWorkspaces();
@@ -13,20 +18,21 @@ const Dashboard = () => {
 
   return (
     <>
-    <Navbar />
-    <div className="max-w-7xl mx-auto px-6 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">
-          Workspaces
-        </h1>
+    <Navbar></Navbar>
+      <button
+        onClick={() => setShowModal(true)}
+      >
+        Create Workspace
+      </button>
 
-        <button>
-          Create Workspace
-        </button>
-      </div>
+      <WorkspaceGrid
+        workspaces={workspaces}
+      />
 
-      <WorkspaceGrid workspaces={workspaces} />
-    </div>
+      <CreateWorkspaceModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+      />
     </>
   );
 };

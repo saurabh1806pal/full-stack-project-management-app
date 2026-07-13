@@ -6,35 +6,104 @@ export const WorkspaceProvider = ({ children }) => {
   const [workspaces, setWorkspaces] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch all workspaces
+  // ===========================
+  // Fetch Workspaces
+  // ===========================
   const fetchWorkspaces = async () => {
+    setLoading(true);
+
     try {
-      setLoading(true);
+      const { data } = await API.get("/workspaces");
 
-      const res = await API.get("/workspaces");
+      setWorkspaces(data);
 
-      setWorkspaces(res.data);
+      return data;
     } catch (error) {
-      console.error(error);
+      console.error("Fetch Workspaces Error:", error.response?.data || error);
+
+      throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  // Create workspace
-  const createWorkspace = async (name) => {
+  // ===========================
+  // Create Workspace
+  // ===========================
+  const createWorkspace = async (workspaceData) => {
+    setLoading(true);
+
     try {
-      setLoading(true);
+      console.log("Sending Workspace:", workspaceData); // Temporary for debugging
 
-      const res = await API.post("/workspaces", {
-        name,
-      });
+      const { data } = await API.post("/workspaces", workspaceData);
 
-      setWorkspaces((prev) => [...prev, res.data]);
+      setWorkspaces((prev) => [...prev, data]);
 
-      return res.data;
+      return data;
     } catch (error) {
-      console.error(error);
+      console.error(
+        "Create Workspace Error:",
+        error.response?.data || error
+      );
+
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ===========================
+  // Delete Workspace
+  // ===========================
+  const deleteWorkspace = async (workspaceId) => {
+    setLoading(true);
+
+    try {
+      await API.delete(`/workspaces/${workspaceId}`);
+
+      setWorkspaces((prev) =>
+        prev.filter((workspace) => workspace._id !== workspaceId)
+      );
+    } catch (error) {
+      console.error(
+        "Delete Workspace Error:",
+        error.response?.data || error
+      );
+
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ===========================
+  // Add Member
+  // ===========================
+  const addMember = async (workspaceId, userId) => {
+    setLoading(true);
+
+    try {
+      const { data } = await API.post(
+        `/workspaces/${workspaceId}/members`,
+        {
+          userId,
+        }
+      );
+
+      setWorkspaces((prev) =>
+        prev.map((workspace) =>
+          workspace._id === workspaceId ? data : workspace
+        )
+      );
+
+      return data;
+    } catch (error) {
+      console.error(
+        "Add Member Error:",
+        error.response?.data || error
+      );
+
       throw error;
     } finally {
       setLoading(false);
@@ -44,10 +113,12 @@ export const WorkspaceProvider = ({ children }) => {
   return (
     <WorkspaceContext.Provider
       value={{
-        workspaces,
         loading,
+        workspaces,
         fetchWorkspaces,
         createWorkspace,
+        deleteWorkspace,
+        addMember,
       }}
     >
       {children}
