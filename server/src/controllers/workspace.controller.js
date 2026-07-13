@@ -78,7 +78,7 @@ exports.addMember = async (req, res) => {
 
     res.json(workspace);
   } catch (error) {
-    console.error("ADD MEMBER ERROR:", error); // 👈 IMPORTANT
-    res.status(500).json({ message: error.message }); // 👈 show real error
+    console.error("ADD MEMBER ERROR:", error); // IMPORTANT
+    res.status(500).json({ message: error.message }); // show real error
   }
 };
