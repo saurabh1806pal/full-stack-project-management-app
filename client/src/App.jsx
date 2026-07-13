@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import WorkSpace from "./pages/WorkSpace";
 
 function App() {
   return (
@@ -12,6 +13,16 @@ function App() {
         <Route path="/" element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/workspaces" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/workspace/:workspaceId" element={
+          <ProtectedRoute>
+            <WorkSpace />
           </ProtectedRoute>
         } />
         <Route path="/login" element={<Login />} />
